@@ -1,6 +1,6 @@
 import { Element } from "parse5/dist/tree-adapters/default";
 
-const ruleRemoveStyles: AstReplace = (node) => {
+const ruleRemoveStyles: AstNodeEditor = (node) => {
   const element = node as Element;
   if (element.attrs && element.attrs.length > 0) {
     element.attrs = element.attrs.filter((attr) => {
@@ -10,6 +10,7 @@ const ruleRemoveStyles: AstReplace = (node) => {
       return true;
     });
   }
+  return true;
 };
 
 export default ruleRemoveStyles;

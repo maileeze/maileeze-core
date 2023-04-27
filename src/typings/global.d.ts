@@ -3,15 +3,7 @@ import { ChildNode, Node } from "parse5/dist/tree-adapters/default";
 // 由于有引用后全局的类型声明就会变成模块，所以要包在namespace里由其他地方引用和导出
 declare namespace GlobalType {
   interface AstRule {
-    (node: Node): unknown;
-  }
-
-  interface AstFilter extends AstRule {
-    (node: ChildNode): boolean;
-  }
-
-  interface AstReplace extends AstRule {
-    (node: ChildNode): void;
+    (node: Node): boolean;
   }
 
   interface AstProcess {
