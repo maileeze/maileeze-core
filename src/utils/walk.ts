@@ -1,4 +1,4 @@
-import { Document, Node, ParentNode } from "parse5/dist/tree-adapters/default";
+import { Node, ParentNode } from "parse5/dist/tree-adapters/default";
 
 export default function walk(node: Node, callback?: (element: Node) => void) {
   if (callback) callback(node);

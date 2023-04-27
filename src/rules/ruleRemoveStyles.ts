@@ -1,0 +1,15 @@
+import { Element } from "parse5/dist/tree-adapters/default";
+
+const ruleRemoveStyles: AstReplace = (node) => {
+  const element = node as Element;
+  if (element.attrs && element.attrs.length > 0) {
+    element.attrs = element.attrs.filter((attr) => {
+      if (attr.name === "class" || attr.name === "style") return false;
+      if (attr.name === "rel" && attr.value === "stylesheet") return false;
+      if (element.nodeName === "link" && attr.name === "href" && attr.value.endsWith("css")) return false;
+      return true;
+    });
+  }
+};
+
+export default ruleRemoveStyles;

@@ -11,7 +11,7 @@ declare namespace GlobalType {
   }
 
   interface AstReplace extends AstRule {
-    (node: ChildNode): Node;
+    (node: ChildNode): void;
   }
 
   interface AstProcess {

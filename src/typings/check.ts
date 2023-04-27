@@ -5,5 +5,5 @@ export function isAstFilter(rule: AstRule): rule is AstFilter {
 }
 
 export function isAstReplace(rule: AstRule): rule is AstReplace {
-  return typeof rule === "function" && rule.length === 1 && rule({} as Node) instanceof Node;
+  return typeof rule === "function" && rule.length === 1 && typeof rule({} as Node) === "undefined";
 }

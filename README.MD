@@ -57,6 +57,8 @@ jsdom因为和我们的需求偏离有点多，我们也用不上那么多DOM功
 
 在用了`parse5/dist/tree-adapters/default.d.ts`给的类型后，终于拿到了带类型的ast可以开始处理了。这过程中我一直很好奇这个`TreeAdapter`是干嘛的，问了问GPT也不是很理解。
 
+反正现在暂时用着默认就够了，也没有要对ast的呈现和修改方式进行自定义这样的需求在，如果有了再说呗，parse5虽然文档很操蛋，但是代码还是很简洁的，自定义程度也很高。
+
 > Tree adapter是一组实用函数，提供了一个抽象层，将解析器和特定的AST格式之间进行最小必要的抽象化。需要注意的是，TreeAdapter并不是设计为通用的AST操作库。您可以在现有的TreeAdapter基础上构建这样的库，或者使用npm上已有的库之一。
 >
 > TreeAdapter是一个抽象层，其主要作用是将parse5生成的AST树映射为不同的AST格式。每种不同的AST格式都需要实现相应的TreeAdapter，以便于实现从parse5的AST树到目标AST格式的转换。
@@ -64,6 +66,23 @@ jsdom因为和我们的需求偏离有点多，我们也用不上那么多DOM功
 虽然但是，我还是不是很理解，感觉就是一个轻量的转换层，提供一些对ast操作的接口，然后允许你把ast转化成另一个形式这样，具体要怎么做我还得参考一下posthtml的实现。
 
 然后我很自然地就想到了用递归遍历组件树，挨个进行修改，这个过程中也参考了一个简单的仓库来写，看看api接口。但是又被类型困住了，总之就是里面弯弯绕绕的类型太多，最后还是决定用`Node`类型统一，到里面只用判断有没有子node就可以了。
+
+```typescript
+import { Node, ParentNode } from "parse5/dist/tree-adapters/default";
+
+export default function walk(node: Node, callback?: (element: Node) => void) {
+  if (callback) callback(node);
+  const parent = node as ParentNode;
+  if (parent.childNodes) {
+    parent.childNodes.forEach((child) => {
+      walk(child, callback);
+    });
+  }
+}
+
+```
+
+
 
 ## 开发过程中遇到的问题
 
