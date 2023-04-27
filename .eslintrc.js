@@ -8,16 +8,18 @@ module.exports = {
     "@typescript-eslint/no-use-before-define": ["error", { ignoreTypeReferences: true }],
     "no-prototype-builtins": "off",
     "import/prefer-default-export": "off",
+    "class-methods-use-this": "off"
   },
   settings: {
     "import/resolver": {
       node: {
         extensions: [".js", ".ts"],
-        moduleDirectory: ["node_modules", "./src"],
-      },
-    },
+        moduleDirectory: ["node_modules", "./src"]
+      }
+    }
   },
   parserOptions: {
     project: "./tsconfig.json",
-  },
+    extraFileExtensions: [".d.ts"]
+  }
 };
