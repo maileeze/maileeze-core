@@ -1,6 +1,5 @@
 import { Node, ParentNode } from "parse5/dist/tree-adapters/default";
 import walk from "../utils/walk";
-import { isAstFilter, isAstReplace } from "../typings/check";
 
 export class RuleChain implements AstProcess {
   private rules: AstRule[] = [];
@@ -26,8 +25,7 @@ export class RuleChain implements AstProcess {
   };
 
   public use(rule: AstRule): RuleChain {
-    if (isAstFilter(rule)) this.rules.push(rule);
-    else if (isAstReplace(rule)) this.replacers.push(rule);
+    this.rules.push(rule);
     return this;
   }
 
