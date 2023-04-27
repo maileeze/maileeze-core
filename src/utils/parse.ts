@@ -1,32 +1,7 @@
-import { Parser, ParserError, ParserOptions, TreeAdapterTypeMap } from "parse5";
+import { Parser, ParserError, ParserOptions } from "parse5";
 import { readFileSync, existsSync } from "fs";
 import path from "path";
-import {
-  Node,
-  ParentNode,
-  ChildNode,
-  Document,
-  DocumentFragment,
-  Element,
-  CommentNode,
-  TextNode,
-  Template,
-  DocumentType
-} from "parse5/dist/tree-adapters/default";
-
-// 泛型顺序：Node, ParentNode, ChildNode, Document, DocumentFragment, Element, CommentNode, TextNode, Template, DocumentType
-type MailTreeAdapterTypeMap = TreeAdapterTypeMap<
-  Node,
-  ParentNode,
-  ChildNode,
-  Document,
-  DocumentFragment,
-  Element,
-  CommentNode,
-  TextNode,
-  Template,
-  DocumentType
->;
+import { DefaultTreeAdapterMap } from "parse5/dist/tree-adapters/default";
 
 function throwFileOException(p: string) {
   throw new Error(`File is not found at "${p}"`);
@@ -47,10 +22,10 @@ export function parseHtml(arg: string) {
 
   const rawFile = readFileSync(filePath, "utf-8");
 
-  const parseOption: ParserOptions<MailTreeAdapterTypeMap> = {
+  const parseOption: ParserOptions<DefaultTreeAdapterMap> = {
     onParseError: (err: ParserError) => {
       throw err;
     }
   };
-  return Parser.parse<MailTreeAdapterTypeMap>(rawFile, parseOption);
+  return Parser.parse<DefaultTreeAdapterMap>(rawFile, parseOption);
 }

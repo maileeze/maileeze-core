@@ -45,6 +45,24 @@ jsdom因为和我们的需求偏离有点多，我们也用不上那么多DOM功
 - responsive是自定义标签，在第一步就需要翻译，初步考虑是先变成div和媒体查询切换的形式
 - 也就是说第一步把responsive转成媒体查询，第三步把grid也变成媒体查询，最后生成的时候直接看媒体查询就行了
 
+## 关于parser5
+
+个人对parser5的理解还不是很深入，最开始我就一直在研究要怎么解析html得到ast，然后又在研究怎么处理ast。
+
+根据我的了解，parse5里直接调用`parse`和`Parser.parse`没啥太大区别；`parseFragment`就是parse一个小部分，没有完整html，这个没有过多研究。
+
+`parse`得到的是一个`document`对象，但是很坑的是在typescript里这玩意儿默认的泛型是`unknown`的，导致我最开始只能用`any`然后转类型，还绕了一大堆弯路，像自己看它print的结果设置了一些interface呀之类的。
+
+在GPT和别人的库代码的帮助下，后来才发现`parse5/dist/tree-adapters/default.d.ts`里有一堆能用的默认类型，气死我了，这下不得不好好看看源码了，实际上我发现parse5的好多工具库（如posthtml）的代码量都很小，包括它本身的代码量也不是特别大，直接看源码有时候反而更高效。
+
+在用了`parse5/dist/tree-adapters/default.d.ts`给的类型后，终于拿到了带类型的ast可以开始处理了。这过程中我一直很好奇这个`TreeAdapter`是干嘛的，问了问GPT也不是很理解。
+
+> Tree adapter是一组实用函数，提供了一个抽象层，将解析器和特定的AST格式之间进行最小必要的抽象化。需要注意的是，TreeAdapter并不是设计为通用的AST操作库。您可以在现有的TreeAdapter基础上构建这样的库，或者使用npm上已有的库之一。
+>
+> TreeAdapter是一个抽象层，其主要作用是将parse5生成的AST树映射为不同的AST格式。每种不同的AST格式都需要实现相应的TreeAdapter，以便于实现从parse5的AST树到目标AST格式的转换。
+
+虽然但是，我还是不是很理解，感觉就是一个轻量的转换层，提供一些对ast操作的接口，然后允许你把ast转化成另一个形式这样，具体要怎么做我还得参考一下posthtml的实现。
+
 ## 开发过程中遇到的问题
 
 关于d.ts的问题：
@@ -72,14 +90,25 @@ export as namespace GlobalType;
 
 ## 参考资料
 
+### 脚手架配置
+
+#### Typescript & Node-Env
+
+- [Node.js脚手架开发完全指南「TypeScript版」 - 掘金 (juejin.cn)](https://juejin.cn/post/7086340583697940516)
+- [搭建自己的 typescript 项目 + 开发自己的脚手架工具 ts-cli - 掘金 (juejin.cn)](https://juejin.cn/post/6901552013717438472)
+
+- [分享快速搭建 Node 端 TypeScript 开发环境 - 掘金 (juejin.cn)](https://juejin.cn/post/6844904052816347149)
+- [node-dev使用简介 - 简书 (jianshu.com)](https://www.jianshu.com/p/99d0d99b3a8a)
+- [Overview | ts-node (typestrong.org)](https://typestrong.org/ts-node/docs/)
+- [ts-node-dev - npm (npmjs.com)](https://www.npmjs.com/package/ts-node-dev)
+
+#### Lint & Formatter
+
 - [ESLint 之与 Prettier 配合使用 - 掘金 (juejin.cn)](https://juejin.cn/post/6924568874700505102#heading-2)
 - [ESlint与Prettier配置指南 - 掘金 (juejin.cn)](https://juejin.cn/post/7050127881371910152)
 - [一文搞懂 ESLint、Prettier 和 Typescript 配置 - 掘金 (juejin.cn)](https://juejin.cn/post/7021920332260835342)
 - [VS Code下Eslint+Prettier+TypeScript一步到位（规范配置） - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/432906440)
-- [分享快速搭建 Node 端 TypeScript 开发环境 - 掘金 (juejin.cn)](https://juejin.cn/post/6844904052816347149)
-- [搭建自己的 typescript 项目 + 开发自己的脚手架工具 ts-cli - 掘金 (juejin.cn)](https://juejin.cn/post/6901552013717438472#heading-9)
-- [node-dev使用简介 - 简书 (jianshu.com)](https://www.jianshu.com/p/99d0d99b3a8a)
-- [Overview | ts-node (typestrong.org)](https://typestrong.org/ts-node/docs/)
-- [ts-node-dev - npm (npmjs.com)](https://www.npmjs.com/package/ts-node-dev)
+
+### 开发问题
 
 - [*.d.ts导入import其它类型导致全局类型失效问题排查及解决办法 - 掘金 (juejin.cn)](https://juejin.cn/post/6981281393812701191)
