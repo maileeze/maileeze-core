@@ -1,4 +1,10 @@
+# node cache
 node_modules
+
+# build
 lib
 
+# tests
 src/test
+test
+*.html

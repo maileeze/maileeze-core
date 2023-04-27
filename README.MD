@@ -79,10 +79,61 @@ export default function walk(node: Node, callback?: (element: Node) => void) {
     });
   }
 }
-
 ```
 
+walk里可以用callback来实现一些编辑操作，经过一些封装就可以实现插件化的自定义系统。
 
+在walk接入插件系统的时候也走了一些弯路，最后发现父组件在遍历子组件的时候就可以直接编辑，不用多做重复的工作，就把replace和filter合成一个rule，在遍历子组件的时候一起执行就行，只是replace始终返回true而已。
+
+```typescript
+export class RuleChain implements AstProcess {
+  private rules: AstRule[] = [];
+
+  private callbackFn: WalkerCallback = (node) => {
+    // 这个逻辑下只用判断子节点，如果没有子节点就直接跳过
+    const p = node as ParentNode;
+    if (p.childNodes) {
+      p.childNodes = p.childNodes.filter((child) => {
+        // 判断它的每个子节点，节点本身在父节点中已经被判断过了
+        let ret = true;
+        for (let i = 0; i < this.rules.length; i += 1) {
+          // 这里分别对子节点运行每个规则，规则既有确定节点是否保留，也有修改节点内容的
+          const preserveNode = this.rules[i](child);
+          if (!preserveNode) {
+            ret = false; // 如果判断为删除就不用再运行后续了
+            break;
+          }
+        }
+        return ret;
+      });
+    }
+  };
+
+  public use(rule: AstRule): RuleChain {
+    this.rules.push(rule);
+    return this;
+  }
+
+  public process(node: Node): Node {
+    walk(node, this.callbackFn);
+    return node;
+  }
+}
+
+export const ruleChain = () => new RuleChain();
+```
+
+最终在使用的时候实现了这样的代码就可以定义一个过程，就像posthtml一样：
+
+```typescript
+ruleChain()
+    .use(ruleRemoveEmpty)
+    .use(ruleRmoveComment)
+    .use(ruleRemoveStyles)
+    .process(ast);
+```
+
+到这里其实html的处理系统就完成得差不多了，大体就是用parse5手写了一个posthtml插件系统和traverse回调系统。
 
 ## 开发过程中遇到的问题
 
