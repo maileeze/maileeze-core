@@ -1,6 +1,7 @@
 // 一种曲线救国方案
 
-type AstProcessor = GlobalType.AstProcessor;
+type AstRule = GlobalType.AstRule;
 type AstFilter = GlobalType.AstFilter;
-type AstReplacer = GlobalType.AstReplacer;
-type AstProcessChain = GlobalType.AstProcessChain;
+type AstReplace = GlobalType.AstReplace;
+type AstProcess = GlobalType.AstProcess;
+type WalkerCallback = GlobalType.WalkerCallback;
