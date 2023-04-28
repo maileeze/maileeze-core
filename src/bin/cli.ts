@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Command } from "commander";
 import compileHandler from "../commands/compile";
 import readPackageInfo from "../utils/config";
