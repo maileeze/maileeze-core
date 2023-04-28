@@ -233,6 +233,10 @@ type WalkerCallback = GlobalType.WalkerCallback;
 
 查的是[#!/usr/bin/env node 到底是什么？ - 掘金 (juejin.cn)](https://juejin.cn/post/6844903826344902670)和[package.json | npm Docs (npmjs.com)](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#bin)
 
+在用chalk来给输出上色的时候也遇到了兼容性问题，具体问题出在chalk5用了ESM标准，导致typescript编译器有点问题，官方建议是用4版本，我也懒得调就直接用回4了。
+
+后面可以自定义一下帮助文本
+
 ## 参考资料
 
 ### 脚手架配置

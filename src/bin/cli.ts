@@ -10,7 +10,8 @@ const packageInfo = readPackageInfo();
 const program = new Command().name(packageInfo.name).version(packageInfo.version);
 
 if (packageInfo.description) {
-  program.description(chalk.white.bgGreen.bold(packageInfo.description));
+  const description = `${chalk.bgGreen.italic.bold(packageInfo.name)}: ${chalk.whiteBright(packageInfo.description)}`;
+  program.description(description);
 }
 
 program
