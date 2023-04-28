@@ -16,7 +16,7 @@ export function saveHtml(fp: string, html: string) {
   const dir = path.dirname(path.resolve(fp));
   checkAndMakeDir(dir);
   writeFileSync(fp, html);
-  console.log(`Saved to ${fp}`);
+  console.log(`HTML as saved to ${path.resolve(fp)}`);
 }
 
 export function saveAst(fp: string, ast: Document) {
