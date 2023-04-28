@@ -1,6 +1,5 @@
 import { Element, Node, ChildNode } from "parse5/dist/tree-adapters/default";
 import { defaultTreeAdapter as adapter } from "parse5";
-import { NS } from "parse5/dist/common/html";
 
 function isBlockElement(node: Node) {
   const blockElements = [
@@ -99,13 +98,17 @@ function isInlineElement(node: Node) {
   return inlineElements.indexOf(node.nodeName) !== -1;
 }
 
+const tableLayout = "table-layout: fixed; border-collapse: collapse; border-spacing: 0; margin: 0; overflow: hidden; padding: 0";
+
 function createTable(node: Element) {
   const table = adapter.createElement("table", node.namespaceURI, []);
+  table.attrs.push({ name: "style", value: tableLayout });
   table.childNodes = node.childNodes;
   for (let i = 0; i < table.childNodes.length; i += 1) {
     table.childNodes[i].parentNode = table;
   }
   table.parentNode = node;
+  // console.log(table);
   return table;
 }
 
