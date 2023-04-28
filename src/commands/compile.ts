@@ -1,5 +1,3 @@
-import { Attribute } from "parse5/dist/common/token";
-import { Element } from "parse5/dist/tree-adapters/default";
 import { ruleChain } from "../rules";
 import ruleRmoveComment from "../rules/ruleRemoveComment";
 import ruleRemoveEmpty from "../rules/ruleRemoveEmpty";

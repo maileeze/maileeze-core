@@ -1,18 +1,14 @@
-import path from "path";
-import { Element } from "parse5/dist/tree-adapters/default";
-import { Attribute } from "parse5/dist/common/token";
 import { Command } from "commander";
-import { parseHtml } from "./utils/parse";
-import { saveAst } from "./utils/save";
-import { ruleChain } from "./rules";
-import ruleRemoveEmpty from "./rules/ruleRemoveEmpty";
-import ruleRmoveComment from "./rules/ruleRemoveComment";
-import walk from "./utils/walk";
-import ruleRemoveStyles from "./rules/ruleRemoveStyles";
 import compileHandler from "./commands/compile";
+import readPackageInfo from "./utils/config";
 
-const program = new Command("maileeze");
-program.description("A html5 email parser and optimizer").version("0.0.1-alpha");
+const packageInfo = readPackageInfo();
+
+const program = new Command(packageInfo.name).version(packageInfo.version);
+
+if (packageInfo.description) {
+  program.description(packageInfo.description);
+}
 
 program
   .command("compile")

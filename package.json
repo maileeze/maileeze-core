@@ -3,9 +3,12 @@
   "version": "0.0.1-alpha",
   "description": "A html5 email parser and optimizer",
   "main": "lib/index.js",
+  "bin": {
+    "maileeze": "lib/index.js"
+  },
   "scripts": {
     "start": "npx tsnd -P ./tsconfig.json --respawn ./src/index.ts",
-    "test": "npx ts-node --project ./tsconfig.json ./src/index.ts",
+    "test": "npx ts-node --project ./tsconfig.json ./src/index.ts compile \"index.html\"",
     "build": "npx tsc"
   },
   "keywords": [
@@ -33,6 +36,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "chalk": "^5.2.0",
     "commander": "^10.0.1",
     "parse5": "^7.1.2"
   }

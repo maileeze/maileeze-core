@@ -3,12 +3,9 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint"],
   rules: {
-    "import/extensions": "off",
-    "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": ["error", { ignoreTypeReferences: true }],
-    "no-prototype-builtins": "off",
+    "no-console": "off",
     "import/prefer-default-export": "off",
-    "class-methods-use-this": "off"
+    "import/extensions": "off"
   },
   settings: {
     "import/resolver": {
