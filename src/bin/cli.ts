@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
+import chalk from "chalk";
 import compileHandler from "../commands/compile";
 import readPackageInfo from "../utils/config";
 
 const packageInfo = readPackageInfo();
 
-const program = new Command(packageInfo.name).version(packageInfo.version);
+const program = new Command().name(packageInfo.name).version(packageInfo.version);
 
 if (packageInfo.description) {
-  program.description(packageInfo.description);
+  program.description(chalk.white.bgGreen.bold(packageInfo.description));
 }
 
 program

@@ -1,7 +1,7 @@
 {
   "name": "maileeze",
   "version": "0.0.1-alpha",
-  "description": "A html5 email parser and optimizer",
+  "description": "A tool package that enables you to write responsive HTML mails with HTML5 grammar.",
   "main": "lib/index.js",
   "bin": {
     "maileeze": "./lib/bin/cli.js",
