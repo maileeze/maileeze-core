@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "npx tsnd -P ./tsconfig.json --respawn ./src/index.ts",
-    "test": "npx ts-node --project ./tsconfig.json ./src/index.ts compile \"index.html\"",
+    "test": "npx ts-node --project ./tsconfig.json ./src/index.ts compile ./test/index.html ./test/out.html",
     "build": "npx tsc"
   },
   "keywords": [
