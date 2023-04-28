@@ -14,6 +14,8 @@ if (packageInfo.description) {
   program.description(description);
 }
 
+// const help = program.createHelp();
+
 program
   .command("compile")
   .description("Compile your HTML5 email to client compatible responsive email")
