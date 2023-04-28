@@ -6,8 +6,13 @@
 
 - 本项目使用`corepack`和`pnpm`管理，请使用node-v16.10+版本
 - 目前已经写了cli，直接运行`node ./lib/index.js`（编译后）或`ts-node ./src/index.ts`就能看到怎么运行
-- `npm test` 是我本机测试时写死的逻辑
-- 由于Windows下的CLI调试有点操蛋，暂时还没做好bin那部分
+- `npm test` 是我本机测试时写死的逻辑，建议用`npm start`
+- ~~由于Windows下的CLI调试有点操蛋，暂时还没做好bin那部分~~犯了一个很蠢的错误，现在已经修复
+- 如何使用`cli`呢？由于本包还没有发布，只能使用一些比较曲折的方式
+  - 安装依赖后，使用`npm start`先看看有些啥命令
+  - 使用`npm start -- compile index.html -o d:/2.html`这样的格式传参，注意一定要先打`--`再开始程序的参数部分
+  - 先编译一下`npm build`，然后`npm link`链接到本地，就可以愉快地全局使用`maileeze`指令了，但是每次更新都要重新link一下
+
 
 ## 技术选型
 
@@ -214,7 +219,19 @@ interface AstNodeEditor extends AstRule {
 }
 type AstProcess = GlobalType.AstProcess;
 type WalkerCallback = GlobalType.WalkerCallback;
+
 ```
+
+### CLI开发遇到的问题
+
+就是犯了个蠢，在调`bin`属性的时候最开始打的`lib/bin/cli.js`，然后每次运行都弹出vscode的对应文件，感觉很烦。
+
+最后查了下资料发现：
+
+- 需要在ts开头写`#!/usr/bin/env node`
+- 指令是`./lib/bin/cli.js`，是的就差了一个点，真的很烦。但是转念一想，确实在linux里没这个点就代表不是运行脚本了，也合理
+
+查的是[#!/usr/bin/env node 到底是什么？ - 掘金 (juejin.cn)](https://juejin.cn/post/6844903826344902670)和[package.json | npm Docs (npmjs.com)](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#bin)
 
 ## 参考资料
 
