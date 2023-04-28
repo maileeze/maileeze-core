@@ -1,6 +1,7 @@
 import path from "path";
 import { Element } from "parse5/dist/tree-adapters/default";
 import { Attribute } from "parse5/dist/common/token";
+import { Command } from "commander";
 import { parseHtml } from "./utils/parse";
 import { saveAst } from "./utils/save";
 import { ruleChain } from "./rules";
@@ -8,23 +9,18 @@ import ruleRemoveEmpty from "./rules/ruleRemoveEmpty";
 import ruleRmoveComment from "./rules/ruleRemoveComment";
 import walk from "./utils/walk";
 import ruleRemoveStyles from "./rules/ruleRemoveStyles";
+import compileHandler from "./commands/compile";
 
-const savePath = path.join(process.cwd(), "test", "out.html");
+const program = new Command("maileeze");
+program.description("A html5 email parser and optimizer").version("0.0.1-alpha");
 
-const ast = parseHtml("index.html");
+program
+  .command("compile")
+  .description("Compile your HTML5 email to client compatible responsive email")
+  .argument("<filePath>", "The file path of your HTML5 email")
+  .option("-o, --output <savePath>", "The output path of your compiled HTML5 email")
+  .action((filePath, options) => {
+    compileHandler(filePath, options?.output);
+  });
 
-ruleChain().use(ruleRemoveEmpty).use(ruleRmoveComment).use(ruleRemoveStyles).process(ast);
-
-walk(ast, (node) => {
-  const printAttr = (attrs: Attribute[]) => {
-    attrs.forEach((attr) => {
-      console.log(`\t${attr.name}=${attr.value}`);
-    });
-  };
-  if ((node as Element)?.attrs && (node as Element)?.attrs.length > 0) {
-    console.log(`${node.nodeName}: `);
-    printAttr((node as Element).attrs);
-  }
-});
-
-saveAst(savePath, ast);
+program.parse();

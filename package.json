@@ -1,7 +1,7 @@
 {
-  "name": "web-scaffold",
-  "version": "1.0.0",
-  "description": "A general scaffold for my personal web development",
+  "name": "maileeze",
+  "version": "0.0.1-alpha",
+  "description": "A html5 email parser and optimizer",
   "main": "lib/index.js",
   "scripts": {
     "start": "npx tsnd -P ./tsconfig.json --respawn ./src/index.ts",
@@ -33,6 +33,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "commander": "^10.0.1",
     "parse5": "^7.1.2"
   }
 }

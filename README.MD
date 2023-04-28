@@ -1,4 +1,4 @@
-> 注意：这现在还不是README，只是记录我做这个东西的过程。
+> 注意：这现在还不是README，只是记录我做这个东西的过程，相当于一个CHANGELOG
 
 ## 技术选型
 
@@ -45,7 +45,11 @@ jsdom因为和我们的需求偏离有点多，我们也用不上那么多DOM功
 - responsive是自定义标签，在第一步就需要翻译，初步考虑是先变成div和媒体查询切换的形式
 - 也就是说第一步把responsive转成媒体查询，第三步把grid也变成媒体查询，最后生成的时候直接看媒体查询就行了
 
-## 关于parser5
+HTML的转换逻辑我画了一个流程图（推荐使用免费开源的draw.io，不要再给wps交钱了），如下：
+
+![流程图.drawio (2)](https://picgo-1308055782.cos.ap-chengdu.myqcloud.com/picgo-new/202304281446784.png)
+
+## 关于parse5
 
 个人对parser5的理解还不是很深入，最开始我就一直在研究要怎么解析html得到ast，然后又在研究怎么处理ast。
 
@@ -135,29 +139,72 @@ ruleChain()
 
 到这里其实html的处理系统就完成得差不多了，大体就是用parse5手写了一个posthtml插件系统和traverse回调系统。
 
+## 命令行工具开发
+
+因为要做一个npm包嘛，那各种封装啊，调用啊，命令行肯定也是要做的。
+
+### CLI 方案
+
+`npm link [packageName]`可以为开发的模块(待发布的npm包)创造**一个全局链接**，在主项目里链接这个依赖的模块，进行测试。也就是可以直接**把当前的包名注册成一个命令**，放在shell的环境变量里方便调试。
+
+`npm unlink`可以取消软链。
+
+### 异常处理
+
+### 测试方案
+
+### 项目管理
+
+
+
 ## 开发过程中遇到的问题
 
-关于d.ts的问题：
+### 关于d.ts类型声明文件的问题
 
-- ts-node无法识别d.ts中声明的类型：在`tsconfig.json`里添加`ts-node: {files: true}`这个属性即可开启多文件识别，而不是之前的单入口解析
+- **ts-node无法识别d.ts中声明的类型**
 
-- 在d.ts类型声明文件中声明的类型突然找不到了
+> 在`tsconfig.json`里添加`ts-node: {files: true}`这个属性即可开启多文件识别，而不是之前的单入口解析
 
-> **`TypeScript` 与` ECMAScript 2015` 一样，任何包含顶级 `import` 或者 `export` 的文件都被当成一个模块。相反地，如果一个文件不带有顶级的 `import` 或者 `export` 声明，那么它的内容被视为全局可见的（因此对模块也是可见的），这就是为什么有时候没有引用某个 `.d.ts` 文件，但是在该 `.d.ts` 文件内部的类型定义在其它文件中仍然能检测得到，这是因为该 `.d.ts` 文件定义的类型已经变成全局的了**
+- **d.ts中需要引用其他类型，`import`后导致无法正常识别类型**
 
-### 通过创建全局命名空间的方式，将想要使用的类型声明挂载到全局命名空间上。
+> `TypeScript` 与` ECMAScript 2015` 一样，任何包含顶级 `import` 或者 `export` 的文件都被当成一个模块。相反地，如果一个文件不带有顶级的 `import` 或者 `export` 声明，那么它的内容被视为全局可见的（因此对模块也是可见的），这就是为什么有时候没有引用某个 `.d.ts` 文件，但是在该 `.d.ts` 文件内部的类型定义在其它文件中仍然能检测得到，这是因为该 `.d.ts` 文件定义的类型已经变成全局的了。
+>
+> 但对于复杂的类型而言，引用是不可避免地，**我们可以通过创建全局命名空间的方式，将想要使用的类型声明挂载到全局命名空间**上，再在另一个d.ts中用命名空间再声明一次类型，就可以全局使用。
 
-```javascript
-// 新建 global.d.ts 文件用来声明全局命名空间
-import { GlobalState, GlobalDispatch } from 'global.ts';
+代码示例如下：
+
+```typescript
+// global.d.ts
+
+import { Node } from "parse5/dist/tree-adapters/default";
 
 declare namespace GlobalType {
-  interface G_State extends GlobalState {}
-  interface G_Dispatch extends GlobalDispatch {}
+  interface AstRule {
+    (node: Node): boolean;
+  }
+
+  interface AstProcess {
+    use(processor: AstRule): AstProcess; // use支持链式调用
+    process(node: Node): Node; // process一定在最后一个，不支持链式
+  }
+
+  interface WalkerCallback {
+    (node: Node): void;
+  }
 }
 
 export = GlobalType;
 export as namespace GlobalType;
+
+
+// rules.d.ts
+
+type AstRule = GlobalType.AstRule;
+interface AstNodeEditor extends AstRule {
+  (node: Node): true;
+}
+type AstProcess = GlobalType.AstProcess;
+type WalkerCallback = GlobalType.WalkerCallback;
 ```
 
 ## 参考资料
