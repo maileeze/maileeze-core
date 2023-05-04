@@ -1,6 +1,6 @@
 {
   "name": "maileeze",
-  "version": "0.0.1-alpha",
+  "version": "0.0.2-alpha",
   "description": "A tool package that enables you to write responsive HTML mails with HTML5 grammar.",
   "main": "lib/index.js",
   "bin": {
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "npx ts-node --project ./tsconfig.json ./src/bin/cli.ts",
-    "test": "npx ts-node --project ./tsconfig.json ./src/index.ts compile ./test/index.html ./test/out.html",
+    "test": "npx ts-node --project ./tsconfig.json ./test/index.ts",
     "build": "npx tsc"
   },
   "keywords": [
