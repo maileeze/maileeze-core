@@ -6,5 +6,6 @@ lib
 
 # tests
 src/test
-test
+# test
 *.html
+*.css

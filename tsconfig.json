@@ -2,11 +2,14 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
+    "test/**/*.ts",
+    "test/**/*.d.ts",
     ".eslintrc.js"
   ],
   "exclude": [
     "node_modules",
-    "lib/**/*"
+    "lib/**/*",
+    "test/assets/**/*"
   ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
